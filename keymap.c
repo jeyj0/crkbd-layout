@@ -24,6 +24,25 @@ enum crkbd_layers {
 #define WORKDOWN LCTL( KC_DOWN )
 #define WORKUP   LCTL( KC_UP )
 
+// vim next tab
+enum custom_kcs {
+	CC_VNT = SAFE_RANGE,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	switch (keycode) {
+		case CC_VNT:
+			if (record->event.pressed) {
+				// when CC_VNT has been pressed
+				unregister_code( KC_LALT );
+				SEND_STRING( SS_LSFT(";") "tabnext\n");
+				register_code( KC_LALT );
+			}
+			break;
+	}
+	return true;
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BASE] = LAYOUT(
 			KC_TAB,   KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
@@ -48,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[_ALT] = LAYOUT( 
 			________, ________, ________, ________, KC_F4,    ________,         ________, ________, ________, ________, ________, ________, 
-			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________, 
+			________, CC_VNT,   ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________, 
 			________, ________, ________, ________, ________, ________,         ________, WORKDOWN,	WORKUP,   ________, ________, ________,
 			                              ________, ________, ________,         ________, ________, ________
 			),
