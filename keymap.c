@@ -20,12 +20,16 @@ enum crkbd_layers {
 #define ________ KC_TRNS
 #define XXXXXXXX KC_NO
 
+// move workspaces down / up; assuming alt is already pressed
+#define WORKDOWN LCTL( KC_DOWN )
+#define WORKUP   LCTL( KC_UP )
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BASE] = LAYOUT(
 			KC_TAB,   KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
 			KC_ESC,   KC_A,     KC_S,     KC_D,     KC_F,             KC_G,             KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
 			KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT,
-			                              KC_LCTL,  CODING,           ALT,              KC_ENT,   KC_SPC,   FUNCTIONS
+			                              KC_LCTL,  CODING,           ALT,              KC_ENT,   SFT_T(KC_SPC),   FUNCTIONS
 			),
 
 	[_GAMING] = LAYOUT(
@@ -37,21 +41,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[_CODING] = LAYOUT(
 			KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,             KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_DEL,
-			________, XXXXXXXX, XXXXXXXX, XXXXXXXX, KC_PLUS,  KC_EQL,           XXXXXXXX, XXXXXXXX, KC_LBRC,  KC_RBRC,  XXXXXXXX, XXXXXXXX,
-			________, XXXXXXXX, XXXXXXXX, XXXXXXXX, KC_MINS,  XXXXXXXX,         XXXXXXXX, XXXXXXXX, KC_LPRN,  KC_RPRN,  XXXXXXXX, ________,
+			________, XXXXXXXX, XXXXXXXX, XXXXXXXX, KC_PLUS,  KC_EQL,           XXXXXXXX, KC_LBRC,  KC_RBRC,  XXXXXXXX, XXXXXXXX, XXXXXXXX,
+			________, XXXXXXXX, XXXXXXXX, XXXXXXXX, KC_MINS,  XXXXXXXX,         XXXXXXXX, KC_LPRN,  KC_RPRN,  XXXXXXXX, XXXXXXXX, ________,
 			                              ________, ________, ________,         ________, ________, ________
 			),
 
 	[_ALT] = LAYOUT( 
 			________, ________, ________, ________, KC_F4,    ________,         ________, ________, ________, ________, ________, ________, 
 			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________, 
-			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,                              
+			________, ________, ________, ________, ________, ________,         ________, WORKDOWN,	WORKUP,   ________, ________, ________,
 			                              ________, ________, ________,         ________, ________, ________
 			),
 
 	[_FUNCTIONS] = LAYOUT( 
-			________, ________, ________, GAMING,   ________, ________,         KC_MS_L,  KC_MS_D,  KC_MS_U,  KC_MS_R,  ________, ________, 
-			________, ________, ________, ________, ________, KC_F6,            KC_LEFT,  KC_DOWN,  KC_UP,    KC_RIGHT, ________, ________,
+			________, ________, ________, GAMING,   ________, ________,         KC_MS_L,  KC_MS_D,  KC_MS_U,  KC_MS_R,  KC_F11,   ________,
+			________, ________, ________, ________, ________, KC_F6,            KC_LEFT,  KC_DOWN,  KC_UP,    KC_RIGHT, KC_LGUI,  ________,
 			________, ________, ________, ________, ________, ________,         ________, KC_BTN1,  KC_BTN2,  ________, ________, ________,
 			                              ________, ________, ________,         ________, ________, ________
 			),
