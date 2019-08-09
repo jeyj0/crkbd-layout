@@ -34,6 +34,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case CC_VNT:
 			if (record->event.pressed) {
 				// when CC_VNT has been pressed
+				// types :tabnext<ENTER>
 				unregister_code( KC_LALT );
 				SEND_STRING( SS_LSFT(";") "tabnext\n");
 				register_code( KC_LALT );
