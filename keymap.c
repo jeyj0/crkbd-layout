@@ -1,9 +1,10 @@
 #include QMK_KEYBOARD_H
 
 enum crkbd_layers {
-	_VIM,
 	_BASE,
 	_GAMING,
+	_VIM_INSERT,
+	_VIM,
 	_CODING,
 	_ALT,
 	_FUNCTIONS, 
@@ -11,12 +12,11 @@ enum crkbd_layers {
 };
 
 // layer keys
-#define VIM DF(_VIM)
-#define BASE DF(_BASE)
-#define GAMING DF(_GAMING)
-#define CODING MO(_CODING)
-#define ALT LM(_ALT, MOD_LALT)
-#define FUNCTIONS MO(_FUNCTIONS)
+#define GAMING 		DF(_GAMING)
+#define VIM 		TG(_VIM)
+#define CODING 		MO(_CODING)
+#define ALT 		LM(_ALT, MOD_LALT)
+#define FUNCTIONS 	MO(_FUNCTIONS)
 
 // aliases for clarity
 #define ________ KC_TRNS
@@ -28,11 +28,38 @@ enum crkbd_layers {
 
 // vim next tab
 enum custom_kcs {
-	CC_VNT = SAFE_RANGE,
+	VIM_INSERT = SAFE_RANGE,
+	CC_VNT,
+	BASE
 };
 
+// startup values
+bool isInVimInsert = false;
+
+// custom keycodes
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
+		case BASE:
+			if (record->event.pressed) {
+				layer_off(_VIM_INSERT);
+				layer_off(_VIM);
+				isInVimInsert = false;
+			}
+			break;
+		case VIM_INSERT:
+			if (record->event.pressed) {
+				// toggle both VIM and VIM_INSERT layers, switching between the two
+				if (isInVimInsert) {
+					layer_on(_VIM);
+					layer_off(_VIM_INSERT);
+				} else {
+					layer_off(_VIM);
+					layer_on(_VIM_INSERT);
+				}
+				isInVimInsert = !isInVimInsert;
+				return false; // don't continue processing key
+			}
+			break;
 		case CC_VNT:
 			if (record->event.pressed) {
 				// when CC_VNT has been pressed
@@ -47,13 +74,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-	[_VIM] = LAYOUT(
-			XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			BASE,     XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-										  XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX
-			),
-
 	[_BASE] = LAYOUT(
 			KC_TAB,   KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
 			KC_ESC,   KC_A,     KC_S,     KC_D,     KC_F,             KC_G,             KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
@@ -66,6 +86,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			XXXXXXXX, KC_ESC,   KC_A,     KC_S,     KC_D,     KC_F,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
 			XXXXXXXX, KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
 			                              XXXXXXXX, KC_SPC,   XXXXXXXX,         XXXXXXXX, XXXXXXXX, BASE
+			),
+
+	[_VIM_INSERT] = LAYOUT(
+			________,   ________, ________, ________, ________, ________, 		________, ________, ________, ________, ________, ________,
+			VIM_INSERT, ________, ________, ________, ________, ________, 		________, ________, ________, ________, ________, ________,
+			________,   ________, ________, ________, ________, ________, 		________, ________, ________, ________, ________, ________,
+										    ________, ________, ________, 		________, ________, ________
+			),
+
+	[_VIM] = LAYOUT(
+			XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, VIM_INSERT, XXXXXXXX, XXXXXXXX, XXXXXXXX,
+			KC_ESC,   XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		KC_LEFT,  KC_DOWN,  KC_UP,      KC_RIGHT, XXXXXXXX, XXXXXXXX,
+			BASE,     XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX,   XXXXXXXX, XXXXXXXX, XXXXXXXX,
+										  XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX
 			),
 
 	[_CODING] = LAYOUT(
