@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, VIM_INSERT, XXXXXXXX, XXXXXXXX, XXXXXXXX,
 			KC_ESC,   XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		KC_LEFT,  KC_DOWN,  KC_UP,      KC_RIGHT, XXXXXXXX, XXXXXXXX,
 			BASE,     XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX,   XXXXXXXX, XXXXXXXX, XXXXXXXX,
-										  XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX
+										  ________, ________, ________, 		XXXXXXXX, XXXXXXXX, ________
 			),
 
 	[_CODING] = LAYOUT(
@@ -117,8 +117,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			),
 
 	[_FUNCTIONS] = LAYOUT( 
-			________, ________, ________, GAMING,   ________, ________,         KC_MS_L,  KC_MS_D,  KC_MS_U,  KC_MS_R,  KC_F11,   ________,
-			________, ________, ________, ________, ________, KC_F6,            KC_LEFT,  KC_DOWN,  KC_UP,    KC_RIGHT, KC_LGUI,  ________,
+			________, KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,            KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,
+			________, ________, ________, ________, ________, GAMING,           KC_MS_L,  KC_MS_D,  KC_MS_U,  KC_MS_R,  KC_LGUI,  ________,
 			________, ________, ________, ________, ________, ________,         ________, KC_BTN1,  KC_BTN2,  ________, ________, ________,
 			                              ________, ________, ________,         ________, ________, ________
 			),
