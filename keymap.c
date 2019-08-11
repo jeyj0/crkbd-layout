@@ -30,6 +30,7 @@ enum custom_kcs {
 	BASE = SAFE_RANGE,
 	VIM_INSERT,
 	ESC,
+	VIM_ENT,
 	CC_VNT
 };
 
@@ -85,6 +86,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				register_code( KC_LALT );
 			}
 			break;
+		case VIM_ENT:
+			if (record->event.pressed) {
+				tap_code(KC_DOWN);
+				tap_code(KC_HOME);
+			}
+			break;
 	}
 	return true;
 }
@@ -105,10 +112,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			),
 
 	[_VIM] = LAYOUT(
-			XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, VIM_INSERT, XXXXXXXX, XXXXXXXX, XXXXXXXX,
+			XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, VIM_INSERT, XXXXXXXX, XXXXXXXX, KC_LEFT,
 			KC_ESC,   XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		KC_LEFT,  KC_DOWN,  KC_UP,      KC_RIGHT, XXXXXXXX, XXXXXXXX,
 			BASE,     XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX,   XXXXXXXX, XXXXXXXX, XXXXXXXX,
-										  ________, ________, ________, 		XXXXXXXX, XXXXXXXX, ________
+										  ________, ________, ________, 		VIM_ENT,  XXXXXXXX, ________
 			),
 
 	[_CODING] = LAYOUT(
