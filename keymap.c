@@ -31,6 +31,7 @@ enum custom_kcs {
 	VIM_INSERT,
 	ESC,
 	VIM_ENT,
+	UP_DOWN,
 	CC_VNT
 };
 
@@ -65,7 +66,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 					unregister_code(KC_ESC);
 				}
 			}
-			break;
+			return false; break;
 		case VIM_INSERT:
 			// vim insert mode is nothing else than the base layer,
 			// but the bool isInVimInsert is set to true, as to indicate
@@ -92,6 +93,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				tap_code(KC_HOME);
 			}
 			break;
+		case UP_DOWN: {
+			static uint16_t kc;
+
+			if (record->event.pressed) {
+				bool isShifted = get_mods() & MOD_MASK_SHIFT;
+
+				if (isShifted) {
+					del_mods(MOD_MASK_SHIFT);
+					kc = KC_DOWN;
+				} else {
+					kc = KC_UP;
+				}
+
+				register_code(kc);
+
+				if (isShifted) {
+					register_code(KC_LSFT);
+				}
+			} else {
+				unregister_code(kc);
+			}
+		}
 	}
 	return true;
 }
@@ -100,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BASE] = LAYOUT(
 			KC_TAB,    KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
 			ESC,       KC_A,     KC_S,     KC_D,     KC_F,             KC_G,             KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
-			XXXXXXXX,  KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_BSLASH,
+			UP_DOWN,   KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_BSLASH,
 			                               KC_LCTL,  CODING,           ALT,              KC_ENT,   SFT_T(KC_SPC),   FUNCTIONS
 			),
 
