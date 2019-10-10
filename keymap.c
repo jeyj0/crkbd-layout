@@ -28,68 +28,226 @@ enum crkbd_layers {
 // vim next tab
 enum custom_kcs {
 	BASE = SAFE_RANGE,
-	VIM_INSERT,
 	ESC,
+	TT_VIM,
 	VIM_ENT,
-	CC_VNT
+	VIM_W,
+	VIM_B,
+	VIM_D,
+	VIM_C,
+	VIM_U,
+	VIM_I,
+	VIM_H,
+	VIM_L
+};
+
+enum vim_actions {
+	VA_NONE,
+	VA_DELETE,
+	VA_CHANGE
+};
+
+enum vim_motion_prefixes {
+	VMP_NONE,
+	VMP_I
+};
+
+enum vim_modes {
+	VM_OFF,
+	VM_NORMAL,
+	VM_INSERT
 };
 
 // startup values
-bool isInVimInsert = false;
+int vim_mode = VM_OFF;
+int vim_action = VA_NONE;
+int vim_motion_prefix = VMP_NONE;
+int vim_toggle_key_presses = 0;
+
+void switch_to_vim_insert(void) {
+	tap_code(KC_INSERT);
+	layer_off(_VIM);
+	vim_mode = VM_INSERT;
+}
+
+void reset_vim_commands(void) {
+	vim_action = VA_NONE;
+	vim_motion_prefix = VMP_NONE;
+}
+
+void switch_to_vim_normal(void) {
+	tap_code(KC_INSERT);
+	layer_on(_VIM);
+	vim_mode = VM_NORMAL;
+}
+
+void switch_on_vim_mode(void) {
+	reset_vim_commands();
+	switch_to_vim_normal();
+	vim_mode = VM_NORMAL;
+}
+
+void switch_off_vim_mode(void) {
+	layer_off(_VIM);
+	if (vim_mode == VM_NORMAL) tap_code(KC_INSERT);
+	vim_mode = VM_OFF;
+}
+
+bool perform_action_on_motion(void (*motion)(bool) ) {
+	switch (vim_action) {
+		case VA_NONE:
+			(*motion)(false);
+			break;
+		case VA_DELETE:
+			(*motion)(true);
+			tap_code(KC_BSPC);
+			vim_action = VA_NONE;
+			break;
+		case VA_CHANGE:
+			(*motion)(true);
+			tap_code(KC_BSPC);
+			switch_to_vim_insert();
+			vim_action = VA_NONE;
+			return false; break;
+	}
+	reset_vim_commands();
+	return true;
+}
 
 // custom keycodes
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	if (record->event.pressed) {
+		if (keycode == TT_VIM) {
+			vim_toggle_key_presses++;
+		} else {
+			vim_toggle_key_presses = 0;
+		}
+	}
+
 	switch (keycode) {
 		case BASE:
 			if (record->event.pressed) {
-				// switching off the vim layer and exiting vim insert mode
-				// (which is the same layer as the base layer,
-				// but the bool is true, as to change ESC's behavior)
-				layer_off(_VIM);
-				isInVimInsert = false;
+				switch_off_vim_mode();
+				return false;
 			}
 			break;
+		case TT_VIM:
+			if (record->event.pressed && vim_mode == VM_OFF) {
+				switch_on_vim_mode();
+			} else if (vim_toggle_key_presses < 3) {
+				switch_off_vim_mode();
+			} else {
+				vim_toggle_key_presses = 0;
+			}
+			return false; break;
 		case ESC:
-			if (isInVimInsert) {
-				if (record->event.pressed) {
-					layer_on(_VIM);
-				}
+			if (vim_mode == VM_INSERT && record->event.pressed) {
+				switch_to_vim_normal();
 			} else {
 				// to behave exactly the same as a native ESC,
 				// a press event is sent when the key is pressed
 				// and a release event is sent when the key is
 				// released, instead of just sending a tap
 				if (record->event.pressed) {
+					if (vim_mode == VM_NORMAL) reset_vim_commands();
 					register_code(KC_ESC);
 				} else {
 					unregister_code(KC_ESC);
 				}
 			}
 			return false; break;
-		case VIM_INSERT:
-			// vim insert mode is nothing else than the base layer,
-			// but the bool isInVimInsert is set to true, as to indicate
-			// that ESC should switch back to the vim layer instead of
-			// sending a native ESC key code
+		case VIM_I:
 			if (record->event.pressed) {
-				layer_off(_VIM);
-				isInVimInsert = true;
+				if (vim_action == VA_NONE) {
+					switch_to_vim_insert();
+				} else {
+					vim_motion_prefix = VMP_I;
+				}
 				return false;
-			}
-			break;
-		case CC_VNT:
-			if (record->event.pressed) {
-				// when CC_VNT has been pressed
-				// types :tabnext<ENTER>
-				unregister_code( KC_LALT );
-				SEND_STRING( SS_LSFT(";") "tabnext\n");
-				register_code( KC_LALT );
 			}
 			break;
 		case VIM_ENT:
 			if (record->event.pressed) {
 				tap_code(KC_DOWN);
 				tap_code(KC_HOME);
+			}
+			break;
+		case VIM_D:
+			if (record->event.pressed) {
+				vim_action = VA_DELETE;
+			}
+			break;
+		case VIM_C:
+			if (record->event.pressed) {
+				vim_action = VA_CHANGE;
+			}
+			break;
+		case VIM_H:
+			if (record->event.pressed) {
+				void do_motion(bool with_selection) {
+					if (with_selection) register_code(KC_LSFT);
+					tap_code(KC_LEFT);
+					if (with_selection) unregister_code(KC_LSFT);
+				}
+				return perform_action_on_motion(do_motion);
+			}
+			break;
+		case VIM_L:
+			if (record->event.pressed) {
+				void do_motion(bool with_selection) {
+					if (with_selection) register_code(KC_LSFT);
+					tap_code(KC_RIGHT);
+					if (with_selection) unregister_code(KC_LSFT);
+				}
+				return perform_action_on_motion(do_motion);
+			}
+			break;
+		case VIM_W:
+			if (record->event.pressed) {
+				void do_motion(bool with_selection) {
+					if (with_selection) {
+						switch (vim_motion_prefix) {
+							case VMP_I:
+								// going right once makes it work more like actual vim
+								tap_code(KC_RIGHT);
+								register_code(KC_LCTL);
+								tap_code(KC_LEFT);
+								unregister_code(KC_LCTL);
+								break;
+						}
+						register_code(KC_LSFT);
+					}
+					register_code(KC_LCTL);
+					tap_code(KC_RIGHT);
+					unregister_code(KC_LCTL);
+					if (with_selection) unregister_code(KC_LSFT);
+				}
+				return perform_action_on_motion(do_motion);
+			}
+			break;
+		case VIM_B:
+			if (record->event.pressed) {
+				if (vim_motion_prefix != VMP_NONE) {
+					// no motion prefixes supported
+					reset_vim_commands();
+					break;
+				}
+
+				void do_motion(bool with_selection) {
+					if (with_selection) register_code(KC_LSFT);
+					register_code(KC_LCTL);
+					tap_code(KC_LEFT);
+					unregister_code(KC_LCTL);
+					if (with_selection) unregister_code(KC_LSFT);
+				}
+				return perform_action_on_motion(do_motion);
+			}
+			break;
+		case VIM_U:
+			if (record->event.pressed) {
+				register_code(KC_LCTL);
+				tap_code(KC_Z);
+				unregister_code(KC_LCTL);
 			}
 			break;
 	}
@@ -100,7 +258,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BASE] = LAYOUT(
 			KC_TAB,    KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
 			ESC,       KC_A,     KC_S,     KC_D,     KC_F,             KC_G,             KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
-			TT(_VIM),  KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_BSLASH,
+			TT_VIM,    KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_BSLASH,
 			                               KC_LCTL,  CODING,           ALT,              KC_ENT,   SFT_T(KC_SPC),   FUNCTIONS
 			),
 
@@ -112,9 +270,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			),
 
 	[_VIM] = LAYOUT(
-			XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, VIM_INSERT, XXXXXXXX, XXXXXXXX, KC_LEFT,
-			KC_ESC,   XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		KC_LEFT,  KC_DOWN,  KC_UP,      KC_RIGHT, XXXXXXXX, XXXXXXXX,
-			BASE,     XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, XXXXXXXX, XXXXXXXX,   XXXXXXXX, XXXXXXXX, VIM,
+			XXXXXXXX, XXXXXXXX, VIM_W,    XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, VIM_U,    VIM_I,    XXXXXXXX, XXXXXXXX, KC_LEFT,
+			ESC,      XXXXXXXX, XXXXXXXX, VIM_D,    XXXXXXXX, XXXXXXXX, 		VIM_H,    KC_DOWN,  KC_UP,    VIM_L,    XXXXXXXX, XXXXXXXX,
+			BASE,     XXXXXXXX, XXXXXXXX, VIM_C,    XXXXXXXX, VIM_B,    		XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, VIM,
 										  ________, ________, ________, 		VIM_ENT,  XXXXXXXX, ________
 			),
 
@@ -127,7 +285,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[_ALT] = LAYOUT( 
 			________, ________, ________, ________, KC_F4,    ________,         ________, ________, ________, ________, ________, ________, 
-			________, CC_VNT,   ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________, 
+			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________, 
 			________, ________, ________, ________, ________, ________,         ________, WORKDOWN,	WORKUP,   ________, ________, ________,
 			                              ________, ________, ________,         ________, ________, ________
 			),
