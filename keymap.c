@@ -65,7 +65,7 @@ int vim_motion_prefix = VMP_NONE;
 int vim_toggle_key_presses = 0;
 
 void switch_to_vim_insert(void) {
-	tap_code(KC_INSERT);
+	// tap_code(KC_INSERT);
 	layer_off(_VIM);
 	vim_mode = VM_INSERT;
 }
@@ -76,7 +76,7 @@ void reset_vim_commands(void) {
 }
 
 void switch_to_vim_normal(void) {
-	tap_code(KC_INSERT);
+	// tap_code(KC_INSERT);
 	layer_on(_VIM);
 	vim_mode = VM_NORMAL;
 }
@@ -89,7 +89,7 @@ void switch_on_vim_mode(void) {
 
 void switch_off_vim_mode(void) {
 	layer_off(_VIM);
-	if (vim_mode == VM_NORMAL) tap_code(KC_INSERT);
+	// if (vim_mode == VM_NORMAL) tap_code(KC_INSERT);
 	vim_mode = VM_OFF;
 }
 
