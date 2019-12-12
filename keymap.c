@@ -6,7 +6,7 @@ enum crkbd_layers {
 	_VIM,
 	_CODING,
 	_ALT,
-	_FUNCTIONS, 
+	_FUNCTIONS,
 	_RESET
 };
 
@@ -256,51 +256,86 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BASE] = LAYOUT(
-			KC_TAB,    KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
-			ESC,       KC_A,     KC_S,     KC_D,     KC_F,             KC_G,             KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
-			TT_VIM,    KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_BSLASH,
-			                               KC_LCTL,  CODING,           ALT,              LGUI_T(KC_ENT),   SFT_T(KC_SPC),   FUNCTIONS
+			KC_BSPC,      KC_P,         KC_O,         KC_I,         KC_U,         KC_Y,               KC_T,         LT(_RESET, KC_R), KC_E,     KC_W,         KC_Q,         KC_TAB,
+			KC_QUOT,      KC_SCLN,      KC_L,         KC_K,         KC_J,         KC_H,               KC_G,         KC_F,         KC_D,         KC_S,         KC_A,         ESC,
+			KC_BSLASH,    KC_SLSH,      KC_DOT,       KC_COMM,      KC_M,         KC_N,               KC_B,         KC_V,         KC_C,         KC_X,         KC_Z,         TT_VIM,
+			                                          FUNCTIONS,    SFT_T(KC_SPC),LGUI_T(KC_ENT),     ALT,          CODING,       KC_LCTL
+
+			// KC_TAB,    KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
+			// ESC,       KC_A,     KC_S,     KC_D,     KC_F,             KC_G,             KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
+			// TT_VIM,    KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_BSLASH,
+			//                                KC_LCTL,  CODING,           ALT,              LGUI_T(KC_ENT),   SFT_T(KC_SPC),   FUNCTIONS
 			),
 
 	[_GAMING] = LAYOUT(
-			XXXXXXXX, KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			XXXXXXXX, KC_ESC,   KC_A,     KC_S,     KC_D,     KC_F,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			XXXXXXXX, KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			                              XXXXXXXX, KC_SPC,   XXXXXXXX,         XXXXXXXX, XXXXXXXX, BASE
+			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_R,         KC_E,         KC_W,         KC_Q,         KC_TAB,       XXXXXXXX,
+			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_F,         KC_D,         KC_S,         KC_A,         KC_ESC,       XXXXXXXX,
+			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_V,         KC_C,         KC_X,         KC_Z,         KC_LSFT,      XXXXXXXX,
+			                                          BASE,         XXXXXXXX,     XXXXXXXX,           XXXXXXXX,     KC_SPC,       XXXXXXXX
+
+			// XXXXXXXX, KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
+			// XXXXXXXX, KC_ESC,   KC_A,     KC_S,     KC_D,     KC_F,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
+			// XXXXXXXX, KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
+			//                            XXXXXXXX, KC_SPC,   XXXXXXXX,         XXXXXXXX, XXXXXXXX, BASE
 			),
 
 	[_VIM] = LAYOUT(
-			XXXXXXXX, XXXXXXXX, VIM_W,    XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, VIM_U,    VIM_I,    XXXXXXXX, XXXXXXXX, KC_LEFT,
-			ESC,      XXXXXXXX, XXXXXXXX, VIM_D,    XXXXXXXX, XXXXXXXX, 		VIM_H,    KC_DOWN,  KC_UP,    VIM_L,    XXXXXXXX, XXXXXXXX,
-			BASE,     XXXXXXXX, XXXXXXXX, VIM_C,    XXXXXXXX, VIM_B,    		XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, VIM,
-										  ________, ________, ________, 		VIM_ENT,  XXXXXXXX, ________
+			KC_LEFT,      XXXXXXXX,     XXXXXXXX,     VIM_I,        VIM_U, 		  XXXXXXXX,           XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     VIM_W,        XXXXXXXX,     XXXXXXXX,
+			XXXXXXXX,     XXXXXXXX,     VIM_L,        KC_UP,        KC_DOWN, 	  VIM_H,              XXXXXXXX,     XXXXXXXX,     VIM_D,        XXXXXXXX,     XXXXXXXX,     ESC,
+			VIM,          XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           VIM_B,        XXXXXXXX,     VIM_C,        XXXXXXXX,     XXXXXXXX,     BASE,
+			                                          ________,     XXXXXXXX,     VIM_ENT,            ________,     ________,     ________
+
+			// XXXXXXXX, XXXXXXXX, VIM_W,    XXXXXXXX, XXXXXXXX, XXXXXXXX, 		XXXXXXXX, VIM_U,    VIM_I,    XXXXXXXX, XXXXXXXX, KC_LEFT,
+			// ESC,      XXXXXXXX, XXXXXXXX, VIM_D,    XXXXXXXX, XXXXXXXX, 		VIM_H,    KC_DOWN,  KC_UP,    VIM_L,    XXXXXXXX, XXXXXXXX,
+			// BASE,     XXXXXXXX, XXXXXXXX, VIM_C,    XXXXXXXX, VIM_B,    		XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, VIM,
+			//  						  ________, ________, ________, 		VIM_ENT,  XXXXXXXX, ________
 			),
 
 	[_CODING] = LAYOUT(
-			KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,             KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_DEL,
-			________, XXXXXXXX, XXXXXXXX, KC_MINS,  KC_PLUS,  KC_EQL,           XXXXXXXX, KC_LBRC,  KC_RBRC,  XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			________, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,         XXXXXXXX, KC_LPRN,  KC_RPRN,  XXXXXXXX, XXXXXXXX, ________,
-			                              ________, ________, ________,         ________, ________, ________
+			KC_DEL,       KC_0,         KC_9,         KC_8,         KC_7,         KC_6,               KC_5,         KC_4,         KC_3,         KC_2,         KC_1,         KC_GRV,
+			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     KC_RBRC,      KC_LBRC,      XXXXXXXX,           KC_EQL,       KC_PLUS,      KC_MINS,      XXXXXXXX,     XXXXXXXX,     ________,
+			________,     XXXXXXXX,     XXXXXXXX,     KC_RPRN,      KC_LPRN,      XXXXXXXX,           XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     ________,
+			                                          ________,     ________,     ________,           ________,     ________,     ________
+
+			// KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,             KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_DEL,
+			// ________, XXXXXXXX, XXXXXXXX, KC_MINS,  KC_PLUS,  KC_EQL,           XXXXXXXX, KC_LBRC,  KC_RBRC,  XXXXXXXX, XXXXXXXX, XXXXXXXX,
+			// ________, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,         XXXXXXXX, KC_LPRN,  KC_RPRN,  XXXXXXXX, XXXXXXXX, ________,
+			//                            ________, ________, ________,         ________, ________, ________
 			),
 
-	[_ALT] = LAYOUT( 
-			________, ________, ________, ________, KC_F4,    ________,         ________, ________, ________, ________, ________, ________, 
-			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________, 
-			________, ________, ________, ________, ________, ________,         ________, WORKDOWN,	WORKUP,   ________, ________, ________,
-			                              ________, ________, ________,         ________, ________, ________
+	[_ALT] = LAYOUT(
+			________,     ________,     ________,     ________,     ________,     ________,           ________,     KC_F4,        ________,     ________,     ________,     ________,
+			________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			________,     ________,     ________,	  WORKUP,       WORKDOWN,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			                                          ________,     ________,     ________,           ________,     ________,     ________
+
+			// ________, ________, ________, ________, KC_F4,    ________,         ________, ________, ________, ________, ________, ________,
+			// ________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,
+			// ________, ________, ________, ________, ________, ________,         ________, WORKDOWN,	WORKUP,   ________, ________, ________,
+			//                            ________, ________, ________,         ________, ________, ________
 			),
 
-	[_FUNCTIONS] = LAYOUT( 
-			________, KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,            KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,
-			________, ________, ________, ________, ________, GAMING,           KC_MS_L,  KC_MS_D,  KC_MS_U,  KC_MS_R,  KC_LGUI,  ________,
-			________, ________, ________, ________, ________, ________,         ________, KC_BTN1,  KC_BTN2,  ________, ________, ________,
-			                              ________, ________, ________,         ________, ________, ________
+	[_FUNCTIONS] = LAYOUT(
+			KC_F11,       KC_F10,       KC_F9,        KC_F8,        KC_F7,        KC_F6,              KC_F5,        KC_F4,        KC_F3,        KC_F2,        KC_F1,        ________,
+			________,     KC_LGUI,      KC_MS_R,      KC_MS_U,      KC_MS_D,      KC_MS_L,            GAMING,       ________,     ________,     ________,     ________,     ________,
+			________,     ________,     ________,     KC_BTN2,      KC_BTN1,      ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			                                          ________,     ________,     ________,           ________,     ________,     ________
+
+			// ________, KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,            KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,
+			// ________, ________, ________, ________, ________, GAMING,           KC_MS_L,  KC_MS_D,  KC_MS_U,  KC_MS_R,  KC_LGUI,  ________,
+			// ________, ________, ________, ________, ________, ________,         ________, KC_BTN1,  KC_BTN2,  ________, ________, ________,
+			//                            ________, ________, ________,         ________, ________, ________
 			),
 
 	[_RESET] = LAYOUT(
-			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________, 
-			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,
-			________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,
-			                              ________, ________, RESET,            ________, ________, ________
+			________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			                                          ________,     ________,     ________,           RESET,        ________,     ________
+
+			// ________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,
+			// ________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,
+			// ________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,
+			//                            ________, ________, RESET,            ________, ________, ________
 			)
 };
