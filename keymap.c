@@ -2,7 +2,9 @@
 
 enum crkbd_layers {
 	_BASE,
+    _QUICK_ACCESS_RIGHT,
 	_GAMING,
+    _GAMING_NUMPAD,
 	_VIM,
 	_CODING,
 	_ALT,
@@ -259,27 +261,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BASE] = LAYOUT(
 			KC_BSPC,      KC_P,         KC_O,         KC_I,         KC_U,         KC_Y,               KC_T,         LT(_RESET, KC_R), KC_E,     KC_W,         KC_Q,         KC_TAB,
-			KC_QUOT,      KC_SCLN,      KC_L,         KC_K,         KC_J,         KC_H,               KC_G,         KC_F,         KC_D,         KC_S,         KC_A,         ESC,
+			KC_QUOT,      KC_SCLN,      KC_L,         KC_K,         KC_J,         KC_H,               KC_G,         LT(_QUICK_ACCESS_RIGHT, KC_F), KC_D, KC_S,KC_A,         ESC,
 			KC_BSLASH,    KC_SLSH,      KC_DOT,       KC_COMM,      KC_M,         KC_N,               KC_B,         KC_V,         KC_C,         KC_X,         KC_Z,         TT_VIM,
 			                                          FUNCTIONS,    SFT_T(KC_SPC),LGUI_T(KC_ENT),     ALT,          CODING,       KC_LCTL
+			),
 
-			// KC_TAB,    KC_Q,     KC_W,     KC_E,     LT(_RESET, KC_R), KC_T,             KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_BSPC,
-			// ESC,       KC_A,     KC_S,     KC_D,     KC_F,             KC_G,             KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
-			// TT_VIM,    KC_Z,     KC_X,     KC_C,     KC_V,             KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_BSLASH,
-			//                                KC_LCTL,  CODING,           ALT,              LGUI_T(KC_ENT),   SFT_T(KC_SPC),   FUNCTIONS
+    [_QUICK_ACCESS_RIGHT] = LAYOUT(
+			________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			________,     ________,     KC_RIGHT,     KC_UP,        KC_DOWN,      KC_LEFT,            ________,     ________,     ________,     ________,     ________,     ________,
+			________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+			                                          ________,     ________,     ________,           ________,     ________,     ________
 			),
 
 	[_GAMING] = LAYOUT(
 			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_R,         KC_E,         KC_W,         KC_Q,         KC_TAB,       XXXXXXXX,
 			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_F,         KC_D,         KC_S,         KC_A,         KC_ESC,       XXXXXXXX,
 			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_V,         KC_C,         KC_X,         KC_Z,         KC_LSFT,      XXXXXXXX,
-			                                          DF(_BASE),         XXXXXXXX,     XXXXXXXX,           XXXXXXXX,     KC_SPC,       CODING
-
-			// XXXXXXXX, KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			// XXXXXXXX, KC_ESC,   KC_A,     KC_S,     KC_D,     KC_F,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			// XXXXXXXX, KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
-			//                            XXXXXXXX, KC_SPC,   XXXXXXXX,         XXXXXXXX, XXXXXXXX, BASE
+			                                          DF(_BASE),    XXXXXXXX,     XXXXXXXX,           XXXXXXXX,     KC_SPC,       MO(_GAMING_NUMPAD)
 			),
+
+    [_GAMING_NUMPAD] = LAYOUT(
+			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_5,         KC_4,         KC_3,         KC_2,         KC_1,       XXXXXXXX,
+			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_0,         KC_9,         KC_8,         KC_7,         KC_6,       XXXXXXXX,
+			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,   XXXXXXXX,
+			                                          ________,     ________,     ________,           ________,     KC_SPC,       ________
+            ),
 
 	[_VIM] = LAYOUT(
 			KC_LEFT,      XXXXXXXX,     XXXXXXXX,     VIM_I,        VIM_U, 		  XXXXXXXX,           XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     VIM_W,        XXXXXXXX,     XXXXXXXX,
@@ -309,7 +315,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			________,     ________,     ________,     ________,     ________,     ________,           ________,     KC_F4,        ________,     ________,     ________,     ________,
 			________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
 			________,     ________,     ________,	  WORKUP,       WORKDOWN,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
-			                                          ________,     ________,     ________,           ________,     ________,     ________
+			                                          CODING,       ________,     ________,           ________,     ________,     ________
 
 			// ________, ________, ________, ________, KC_F4,    ________,         ________, ________, ________, ________, ________, ________,
 			// ________, ________, ________, ________, ________, ________,         ________, ________, ________, ________, ________, ________,
