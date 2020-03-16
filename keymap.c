@@ -128,6 +128,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case BASE:
 			if (record->event.pressed) {
 				switch_off_vim_mode();
+                layer_off(_GAMING);
+                layer_on(_BASE);
 				return false;
 			}
 			break;
@@ -271,7 +273,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_R,         KC_E,         KC_W,         KC_Q,         KC_TAB,       XXXXXXXX,
 			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_F,         KC_D,         KC_S,         KC_A,         KC_ESC,       XXXXXXXX,
 			XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,     XXXXXXXX,           KC_V,         KC_C,         KC_X,         KC_Z,         KC_LSFT,      XXXXXXXX,
-			                                          BASE,         XXXXXXXX,     XXXXXXXX,           XXXXXXXX,     KC_SPC,       XXXXXXXX
+			                                          DF(_BASE),         XXXXXXXX,     XXXXXXXX,           XXXXXXXX,     KC_SPC,       XXXXXXXX
 
 			// XXXXXXXX, KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
 			// XXXXXXXX, KC_ESC,   KC_A,     KC_S,     KC_D,     KC_F,             XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
