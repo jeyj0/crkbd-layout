@@ -8,6 +8,7 @@ enum crkbd_layers {
     _CODING,
     _ALT,
     _FUNCTIONS,
+    _RIGHT_SPECIAL,
     _RESET
 };
 
@@ -46,7 +47,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
             KC_BSPC,      KC_P,         KC_O,         KC_I,         KC_U,         KC_Y,               KC_T,         LT(_RESET, KC_R), KC_E,     KC_W,         KC_Q,         KC_TAB,
-            KC_QUOT,      KC_SCLN,      KC_L,         KC_K,         KC_J,         KC_H,               KC_G,         LT(_QUICK_ACCESS_RIGHT, KC_F), KC_D, KC_S,KC_A,         KC_ESC,
+            KC_QUOT,      KC_SCLN,      KC_L,         KC_K,         KC_J,         KC_H,               KC_G,         LT(_QUICK_ACCESS_RIGHT, KC_F), LT(_RIGHT_SPECIAL, KC_D), KC_S,KC_A,         KC_ESC,
             KC_BSLASH,    KC_SLSH,      KC_DOT,       KC_COMM,      KC_M,         KC_N,               KC_B,         KC_V,         KC_C,         KC_X,         KC_Z,         KC_LSFT,
                                                       FUNCTIONS,    SFT_T(KC_SPC),LGUI_T(KC_ENT),     ALT,          CODING,       KC_LCTL
             ),
@@ -54,6 +55,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QUICK_ACCESS_RIGHT] = LAYOUT(
             ________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
             ________,     ________,     KC_RIGHT,     KC_UP,        KC_DOWN,      KC_LEFT,            ________,     ________,     ________,     ________,     ________,     ________,
+            ________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+                                                      ________,     ________,     ________,           ________,     ________,     ________
+            ),
+
+    [_RIGHT_SPECIAL] = LAYOUT(
+            ________,     ________,     ________,     DM_PLY2,      DM_REC2,      ________,           ________,     ________,     ________,     ________,     ________,     ________,
+            ________,     ________,     ________,     DM_PLY1,      DM_REC1,      ________,           ________,     ________,     ________,     ________,     ________,     ________,
             ________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
                                                       ________,     ________,     ________,           ________,     ________,     ________
             ),
