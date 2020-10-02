@@ -12,28 +12,6 @@ enum crkbd_layers {
     _RESET
 };
 
-enum unicode_names {
-    A_L_UML, // a-lower-umlaut
-    A_U_UML, // a-upper-umlaut
-    O_L_UML,
-    O_U_UML,
-    U_L_UML,
-    U_U_UML,
-    S_ZET_L, // sz-lower
-    S_ZET_U  // sz-upper
-};
-
-const uint32_t PROGMEM unicode_map[] = {
-    [A_L_UML] = 0x00E4,
-    [A_U_UML] = 0x00C4,
-    [O_L_UML] = 0x00F6,
-    [O_U_UML] = 0x00D6,
-    [U_L_UML] = 0x00FC,
-    [U_U_UML] = 0x00DC,
-    [S_ZET_L] = 0x00DF,
-    [S_ZET_U] = 0x1E9E,
-};
-
 // layer keys
 #define GAMING      DF(_GAMING)
 #define VIM         TG(_VIM)
@@ -289,8 +267,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             ),
 
     [_QUICK_ACCESS_RIGHT] = LAYOUT(
-            ________,     ________,     XP(O_L_UML, O_U_UML), ________, XP(U_L_UML, U_U_UML), ________, ________,   ________,     ________,     ________,     ________,     ________,
-            ________,     ________,     KC_RIGHT,     KC_UP,        KC_DOWN,      KC_LEFT,            ________,     ________,     ________,     XP(S_ZET_L, S_ZET_U), XP(A_L_UML, A_U_UML), ________,
+            ________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
+            ________,     ________,     KC_RIGHT,     KC_UP,        KC_DOWN,      KC_LEFT,            ________,     ________,     ________,     ________,     ________,     ________,
             ________,     ________,     ________,     ________,     ________,     ________,           ________,     ________,     ________,     ________,     ________,     ________,
                                                       ________,     ________,     ________,           ________,     ________,     ________
             ),
