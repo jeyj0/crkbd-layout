@@ -39,7 +39,7 @@ const uint32_t PROGMEM unicode_map[] = {
 #define VIM         TG(_VIM)
 #define CODING      MO(_CODING)
 #define ALT         LM(_ALT, MOD_LALT)
-#define FUNCTIONS   MO(_FUNCTIONS)
+#define FUNCTIONS   LT(_FUNCTIONS, KC_RALT)
 
 // aliases for clarity
 #define ________ KC_TRNS
